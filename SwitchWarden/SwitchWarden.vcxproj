@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}</ProjectGuid>
+    <RootNamespace>SwitchWarden</RootNamespace>
+    <ProjectName>SwitchWarden</ProjectName>
+    <Keyword>Linux</Keyword>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <!-- Browse/edit the EmbeddedGFX library source alongside the project. The
+         library is consumed at build time as an Arduino library (junction in
+         the Arduino libraries folder). -->
+    <Import Project="..\..\EmbeddedGFX\EmbeddedGFX.vcxitems" Label="Shared" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <LinuxIncludePath>c:\visualmicro\ignore</LinuxIncludePath>
+    <TargetOSAndVersion>Arduino</TargetOSAndVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ValidateArchitecture>false</ValidateArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ValidateArchitecture>false</ValidateArchitecture>
+    <IncludePath>$(ProjectDir)..\SwitchWarden;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\SPI;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\ILI9488_t3\src;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_FT6206_Library;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_BusIO;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\Wire;$(ProjectDir)..\..\..\Arduino\libraries\Time;$(ProjectDir)..\..\EmbeddedGFX\src;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\cores\teensy4;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1\backward;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\lib\gcc\arm-none-eabi\11.3.1\include;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\SPI;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\ILI9488_t3\src;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_FT6206_Library;$(ProjectDir)..\..\..\Arduino\libraries\Time;$(ProjectDir)..\..\EmbeddedGFX\src</IncludePath>
+    <RemoteCCompileToolExe>$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\bin\arm-none-eabi-g++</RemoteCCompileToolExe>
+    <RemoteCppCompileToolExe>$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\bin\arm-none-eabi-g++</RemoteCppCompileToolExe>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectCapability Include="VisualMicro" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SwitchWarden;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\SPI;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\ILI9488_t3\src;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_FT6206_Library;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_BusIO;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\Wire;$(ProjectDir)..\..\..\Arduino\libraries\Time;$(ProjectDir)..\..\EmbeddedGFX\src;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\cores\teensy4;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include\c++\11.3.1\backward;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\lib\gcc\arm-none-eabi\11.3.1\include;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;$(ProjectDir)..\..\..\..\..\appdata\local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\arm-none-eabi\include;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\SPI;$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\hardware\avr\1.61.0\libraries\ILI9488_t3\src;$(ProjectDir)..\..\..\Arduino\libraries\Adafruit_FT6206_Library;$(ProjectDir)..\..\..\Arduino\libraries\Time;$(ProjectDir)..\..\EmbeddedGFX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GccToolChain>$(ProjectDir)..\..\..\..\..\AppData\Local\arduino15\packages\teensy\tools\teensy-compile\11.3.1\arm\bin\arm-none-eabi-g++</GccToolChain>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CAdditionalWarning />
+      <CppAdditionalWarning />
+      <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\..\..\..\program files\microsoft visual studio\18\community\common7\ide\extensions\ar2twp2j.msb\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\..\AppData\Local\Temp\VMBuilds\SwitchWarden\teensy40\Debug\.vmintelli\d7e71daddc75ef9b62257f98af93d786\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\..\..\..\program files\microsoft visual studio\18\community\common7\ide\extensions\ar2twp2j.msb\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.SwitchWarden.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__TEENSY4_imxrt1062__;__TEENSY4_IMXRT1062__;_VMDEBUG=1;__IMXRT1062__;TEENSYDUINO=160;ARDUINO=108010;ARDUINO_TEENSY40;F_CPU=600000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="SwitchWarden.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="PowerControl.cpp" />
+    <ClCompile Include="PowerApp.cpp" />
+    <ClCompile Include="MonitorApp.cpp" />
+    <ClCompile Include="font_Michroma.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="appConfig.h" />
+    <ClInclude Include="ILI9488Adapter.h" />
+    <ClInclude Include="FT6206Adapter.h" />
+    <ClInclude Include="PowerControl.h" />
+    <ClInclude Include="PowerApp.h" />
+    <ClInclude Include="MonitorApp.h" />
+    <ClInclude Include="font_Michroma.h" />
+    <ClInclude Include="def_ili9341_fonts.h" />
+    <ClInclude Include="__vm\.SwitchWarden.vsarduino.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties arduino.board.name="teensy40" arduino.upload.port="usb:80001/3/0/2" config.Debug.customdebug_teensy40_debugger_type="universal" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
