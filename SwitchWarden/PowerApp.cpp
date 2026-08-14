@@ -45,10 +45,10 @@ static void styleAction(uint8_t p)
 
     if (locked)
     {
-        a.setText("LOCKED ON");
-        a.setBgColor(COL_LOCK);
+        a.setText("LOCKED");
+        a.setBgColor(gfxTheme.orangeBtn);
         a.setBorderColor(COL_LOCK);
-        a.setTextColor(COL_DIM);
+        a.setTextColor(0x0000);
         a.setClickable(false);
     }
     else
