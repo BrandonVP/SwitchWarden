@@ -12,8 +12,12 @@ uint8_t monitor_createBtns(void)
 {
     UserInterfaceClass* b = GUI_I.appButtons();
 
-    b[0].setButton(40, 130, 440, 190, 0, true, 12, "Monitor - coming soon", ALIGN_CENTER,
-                   gfxTheme.background, gfxTheme.background, gfxTheme.btnTextColor);
+    // Match the Power tab's airy backdrop.
+    GUI_I.fillGradientV(0, GFX_MENU_BAR_HEIGHT, GFX_SCREEN_WIDTH, GFX_SCREEN_HEIGHT - GFX_MENU_BAR_HEIGHT,
+                        gfxShade(gfxTheme.menuBg, 85), 0xFFFF);
+
+    b[0].setButton(40, 210, 440, 270, 0, true, 12, "Monitor - coming soon", ALIGN_CENTER,
+                   0xFFFF, 0xFFFF, gfxTheme.btnTextColor);
     b[0].setClickable(false);
     b[0].setTextSize(16);
 

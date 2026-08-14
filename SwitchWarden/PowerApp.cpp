@@ -65,24 +65,33 @@ uint8_t power_createBtns(void)
 {
     UserInterfaceClass* b = GUI_I.appButtons();
 
+    // Airy backdrop: a light-blue -> white gradient behind the cards.
+    GUI_I.fillGradientV(0, GFX_MENU_BAR_HEIGHT, GFX_SCREEN_WIDTH, GFX_SCREEN_HEIGHT - GFX_MENU_BAR_HEIGHT,
+                        gfxShade(gfxTheme.menuBg, 85), 0xFFFF);
+
+    uint16_t cardShadow = 0xBDD7;   // soft grey drop shadow (tune on hardware)
+
     for (uint8_t p = 0; p < PSU_COUNT; p++)
     {
-        int y = 60 + p * 63;
+        int y = 58 + p * 63;
 
-        // Name label — plain text on the app background (non-clickable).
-        b[nameIdx(p)].setButton(12, y, 150, y + 54, 0, true, 8, PSU_NAMES[p], ALIGN_LEFT,
-                                gfxTheme.background, gfxTheme.background, gfxTheme.btnTextColor);
+        // Floating white card for this PSU.
+        GUI_I.drawCard(10, y, 460, 54, 12, 0xFFFF, cardShadow, 3);
+
+        // Name — navy text on the card (fill = card white, so no visible box).
+        b[nameIdx(p)].setButton(28, y, 156, y + 54, 0, true, 8, PSU_NAMES[p], ALIGN_LEFT,
+                                0xFFFF, 0xFFFF, gfxTheme.btnTextColor);
         b[nameIdx(p)].setClickable(false);
         b[nameIdx(p)].setTextSize(16);
 
         // Run-status pill (non-clickable) — styled from the monitor input.
-        b[statusIdx(p)].setButton(158, y, 300, y + 54, 0, true, 10, "OFF", ALIGN_CENTER,
-                                  gfxTheme.background, gfxTheme.btnBorder, COL_DIM);
+        b[statusIdx(p)].setButton(160, y + 8, 298, y + 46, 0, true, 12, "OFF", ALIGN_CENTER,
+                                  0xFFFF, gfxTheme.btnBorder, COL_DIM);
         b[statusIdx(p)].setClickable(false);
         b[statusIdx(p)].setTextSize(13);
 
         // Start/stop action button.
-        b[actionIdx(p)].setButton(308, y, 468, y + 54, ACTION_BASE + p, true, 10, "START", ALIGN_CENTER,
+        b[actionIdx(p)].setButton(306, y + 8, 458, y + 46, ACTION_BASE + p, true, 12, "START", ALIGN_CENTER,
                                   gfxTheme.btnColor, gfxTheme.btnBorder, gfxTheme.btnText);
         b[actionIdx(p)].setTextSize(16);
 

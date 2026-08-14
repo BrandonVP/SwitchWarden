@@ -20,7 +20,6 @@
 #include <SPI.h>
 #include <ILI9488_t3.h>
 #include <Adafruit_FT6206.h>
-#include <TimeLib.h>            // status-bar clock (Teensy RTC)
 
 #include "appConfig.h"          // GFX overrides + <EmbeddedGFX.h> + project enums
 #include <apps/ThemeApp.h>      // library theme picker
@@ -48,37 +47,6 @@ App app;
 DMAMEM UserInterfaceClass appButtons[GFX_APP_BUTTON_SIZE];
 UserInterfaceClass        menuButtons[GFX_MENU_BUTTON_SIZE];
 
-// --- Status bar (clock left; no battery on this build) ---------------------
-#define STATUS_CLOCK_W 78
-
-time_t getTeensy3Time() { return Teensy3Clock.get(); }
-
-void drawClock()
-{
-    char t[16], d[16];
-    snprintf(t, sizeof(t), "%02d:%02d:%02d", hour(), minute(), second());
-    snprintf(d, sizeof(d), "%02d/%02d/%02d", month(), day(), year() % 100);
-
-    tft.setTextColor(gfxTheme.btnTextColor);
-    tft.setFont(Michroma_8);
-    tft.fillRect(2, 6, STATUS_CLOCK_W, 32, gfxTheme.menuBg);
-    tft.drawString(t, strlen(t), 4, 8);
-    tft.drawString(d, strlen(d), 4, 24);
-    tft.setFont(Michroma_11);
-}
-
-void updateStatusBar()
-{
-    static uint32_t last = 0;
-    if (millis() - last < 1000) return;
-    last = millis();
-
-    tft.useFrameBuffer(false);
-    drawClock();
-    tft.useFrameBuffer(true);
-    drawClock();
-}
-
 // --- Menu bar --------------------------------------------------------------
 void createMenuBtns()
 {
@@ -90,16 +58,29 @@ void createMenuBtns()
 // Draw the top menu bar. Also used as ThemeApp's menu-redraw hook.
 void drawMenuBar()
 {
-    GUI_I.drawSquareBtn(0,  0, GFX_SCREEN_WIDTH, 45, "", gfxTheme.menuBg, gfxTheme.menuBg, gfxTheme.menuBg, ALIGN_CENTER);
+    // Gradient header: deep blue at top fading to the theme's menu blue.
+    GUI_I.fillGradientV(0, 0, GFX_SCREEN_WIDTH, 45, gfxShade(gfxTheme.menuBg, -35), gfxTheme.menuBg);
+    // Underline strip below the bar.
     GUI_I.drawSquareBtn(0, 45, GFX_SCREEN_WIDTH, GFX_MENU_BAR_HEIGHT, "", gfxTheme.menuBorder, gfxTheme.menuBorder, gfxTheme.menuBorder, ALIGN_CENTER);
 
+    // Set up the tab rects (used for hit-testing + the active underline). The
+    // tabs are NOT drawn as filled boxes — their labels are drawn as white text
+    // straight over the gradient so the gradient shows through.
     createMenuBtns();
-    uint8_t state = 0;
-    while (GUI_I.drawPage(menuButtons, state, GFX_MENU_BUTTON_SIZE));
-    GUI_I.setGraphicLoaderState(0);
 
-    // Underline the active app's tab (matches the on-tap highlight). Menu ids
-    // line up with menuButtons order (power=0, monitor=1, settings=2).
+    tft.setFont(Michroma_14);
+    tft.setTextColor(0xFFFF);
+    for (uint8_t i = 0; i < GFX_MENU_BUTTON_SIZE; i++)
+    {
+        const char* label = menuButtons[i].getBtnText();
+        int len = strlen(label);
+        int w = tft.strPixelLen((char*)label, (uint16_t)len);
+        int cx = (menuButtons[i].getXStart() + menuButtons[i].getXStop()) / 2;
+        tft.drawString(label, len, cx - w / 2, 15);
+    }
+    tft.setFont(Michroma_11);
+
+    // Underline the active app's tab. Menu ids line up with menuButtons order.
     gfx_menu_id_t activeMenu = app.getActiveMenu();
     if (activeMenu < GFX_MENU_BUTTON_SIZE)
     {
@@ -107,7 +88,6 @@ void drawMenuBar()
         GUI_I.drawSquareBtn(mb.getXStart(), 45, mb.getXStop(), 50, "", gfxTheme.btnColor, gfxTheme.btnColor, mb.getBorderColor(), ALIGN_CENTER);
     }
 
-    drawClock();
     tft.updateScreen();
 }
 
@@ -122,12 +102,28 @@ void registerApps()
     app.add(MENU_settings, "Themes",   APP_THEME,         ThemeApp_handler, ThemeApp_createBtns);
 }
 
+// Light "frost" look inspired by the reference smart-panel mockup: white body,
+// rich blue header, navy text, blue primary + orange (stop) accents. Applied
+// after ThemeApp_begin so it is the default; the Settings > Themes picker still
+// overrides it.
+void applyFrostPalette()
+{
+    gfxTheme.background   = 0xFFFF;                // white body
+    gfxTheme.menuBg       = 0x2C3A;                // rich sky blue (header base)
+    gfxTheme.menuBorder   = gfxShade(0x2C3A, -35); // deep blue underline strip
+    gfxTheme.btnColor     = 0x2C3A;                // blue primary / active underline
+    gfxTheme.btnBorder    = 0xC618;                // light grey border
+    gfxTheme.btnText      = 0xFFFF;                // white text on blue buttons
+    gfxTheme.btnTextColor = 0x0A4B;                // navy body/card text
+    gfxTheme.orangeBtn    = 0xFC00;                // orange (STOP)
+    gfxTheme.blackBtn     = 0x0000;
+    gfxTheme.frameBorder  = 0xC618;
+}
+
 // ---------------------------------------------------------------------------
 void setup()
 {
     Serial.begin(115200);
-
-    setSyncProvider(getTeensy3Time);   // status-bar clock from the Teensy RTC
 
     pinMode(LCD_BL, OUTPUT);
     digitalWrite(LCD_BL, HIGH);
@@ -145,6 +141,7 @@ void setup()
     // Themes: RAM-only (no persistence). Repaint the menu bar on palette change.
     ThemeApp_setMenuRedraw(drawMenuBar);
     ThemeApp_begin();
+    applyFrostPalette();   // default to the light frost look
 
     POWER_init();       // GPIOs off; safe state at boot
 
@@ -161,5 +158,4 @@ void loop()
     GUI_I.updateTouch();
     app.run();
     POWER_tick();       // cooling auto-off timer (runs on every tab)
-    updateStatusBar();
 }
