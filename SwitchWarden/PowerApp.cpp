@@ -22,7 +22,7 @@ static const uint16_t COL_RUN  = 0x07E0; // green — running
 static const uint16_t COL_LOCK = 0x8410; // grey  — cooling locked on
 static const uint16_t COL_DIM  = 0x8410; // grey  — "OFF" / disabled text
 
-static const char* const PSU_NAMES[PSU_COUNT] = { "PC 1", "PC 2", "PC 3", "Cooling" };
+static const char* const PSU_NAMES[PSU_COUNT] = { "Brandon", "Jason", "Ubuntu", "Cooling" };
 
 static bool s_lastRunning[PSU_COUNT];
 static bool s_lastCommanded[PSU_COUNT];
@@ -55,7 +55,7 @@ static void styleAction(uint8_t p)
     {
         a.setText(on ? "STOP" : "START");
         a.setBgColor(on ? gfxTheme.orangeBtn : gfxTheme.btnColor);
-        a.setBorderColor(on ? gfxTheme.orangeBtn : gfxTheme.btnBorder);
+        a.setBorderColor(gfxTheme.btnBorder);
         a.setTextColor(on ? 0x0000 : gfxTheme.btnText);
         a.setClickable(true);
     }
@@ -79,7 +79,7 @@ uint8_t power_createBtns(void)
         GUI_I.drawCard(10, y, 460, 54, 12, 0xFFFF, cardShadow, 3);
 
         // Name — navy text on the card (fill = card white, so no visible box).
-        b[nameIdx(p)].setButton(28, y, 156, y + 54, 0, true, 8, PSU_NAMES[p], ALIGN_LEFT,
+        b[nameIdx(p)].setButton(20, y, 156, y + 54, 0, true, 8, PSU_NAMES[p], ALIGN_LEFT,
                                 0xFFFF, 0xFFFF, gfxTheme.btnTextColor);
         b[nameIdx(p)].setClickable(false);
         b[nameIdx(p)].setTextSize(16);
