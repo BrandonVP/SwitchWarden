@@ -68,15 +68,15 @@ void drawMenuBar()
     // straight over the gradient so the gradient shows through.
     createMenuBtns();
 
-    tft.setFont(Michroma_14);
-    tft.setTextColor(0xFFFF);
+    tft.setFont(Michroma_16);
+    tft.setTextColor(gfxTheme.menuText);
     for (uint8_t i = 0; i < GFX_MENU_BUTTON_SIZE; i++)
     {
         const char* label = menuButtons[i].getBtnText();
         int len = strlen(label);
         int w = tft.strPixelLen((char*)label, (uint16_t)len);
         int cx = (menuButtons[i].getXStart() + menuButtons[i].getXStop()) / 2;
-        tft.drawString(label, len, cx - w / 2, 15);
+        tft.drawString(label, len, cx - w / 2, 14);
     }
     tft.setFont(Michroma_11);
 
@@ -115,6 +115,7 @@ void applyFrostPalette()
     gfxTheme.btnBorder    = 0xC618;                // light grey border
     gfxTheme.btnText      = 0xFFFF;                // white text on blue buttons
     gfxTheme.btnTextColor = 0x0A4B;                // navy body/card text
+    gfxTheme.menuText     = 0xFFFF;                // white tab labels over the bar
     gfxTheme.orangeBtn    = 0xFC00;                // orange (STOP)
     gfxTheme.blackBtn     = 0x0000;
     gfxTheme.frameBorder  = 0xC618;
