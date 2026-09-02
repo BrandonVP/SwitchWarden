@@ -28,6 +28,7 @@
 #include "PowerControl.h"
 #include "PowerApp.h"
 #include "MonitorApp.h"
+#include "AboutApp.h"
 #include "font_Michroma.h"
 
 // --- Pins (from teensy40_480x320_lcd schematic) ----------------------------
@@ -100,6 +101,7 @@ void registerApps()
     app.add(MENU_monitor,  "Monitor",  APP_MONITOR,       monitor_handler,  monitor_createBtns);
     app.add(MENU_settings, "Settings", APP_SETTINGS_MENU, GFX_menuInput,    GFX_createMenu);
     app.add(MENU_settings, "Themes",   APP_THEME,         ThemeApp_handler, ThemeApp_createBtns);
+    app.add(MENU_settings, "About",    APP_ABOUT,         about_handler,    about_createBtns);
 }
 
 // Light "frost" look inspired by the reference smart-panel mockup: white body,
@@ -158,5 +160,13 @@ void loop()
     GUI_I.buttonMonitor(menuButtons, GFX_MENU_BUTTON_SIZE);
     GUI_I.updateTouch();
     app.run();
-    POWER_tick();       // cooling auto-off timer (runs on every tab)
+    POWER_tick();       // cooling auto-off + pulse engine + safety interlock (every tab)
+
+    // Surface a cooling-loss fault the moment it latches: jump to the Power tab
+    // (where the alert + ACK live) even if another tab was showing.
+    static bool s_lastFault = false;
+    bool fault = POWER_isCoolingFault();
+    if (fault && !s_lastFault && app.getActiveApp() != APP_POWER)
+        app.newApp(APP_POWER);
+    s_lastFault = fault;
 }

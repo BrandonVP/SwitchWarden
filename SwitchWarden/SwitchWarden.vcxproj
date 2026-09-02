@@ -79,6 +79,7 @@
     <ClCompile Include="PowerControl.cpp" />
     <ClCompile Include="PowerApp.cpp" />
     <ClCompile Include="MonitorApp.cpp" />
+    <ClCompile Include="AboutApp.cpp" />
     <ClCompile Include="font_Michroma.c" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +89,8 @@
     <ClInclude Include="PowerControl.h" />
     <ClInclude Include="PowerApp.h" />
     <ClInclude Include="MonitorApp.h" />
+    <ClInclude Include="AboutApp.h" />
+    <ClInclude Include="Version.h" />
     <ClInclude Include="font_Michroma.h" />
     <ClInclude Include="def_ili9341_fonts.h" />
     <ClInclude Include="__vm\.SwitchWarden.vsarduino.h" />
@@ -97,7 +100,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.board.name="teensy40" arduino.upload.port="usb:80001/3/0/2" config.Debug.customdebug_teensy40_debugger_type="universal" />
+      <UserProperties arduino.board.name="teensy40" arduino.upload.port="usb:80003/4/0/1/2/1/4" config.Debug.customdebug_teensy40_debugger_type="universal" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

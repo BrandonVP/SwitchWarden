@@ -34,6 +34,7 @@ enum AppLabels {
     APP_MONITOR,         // Monitor tab — placeholder (opens directly)
     APP_SETTINGS_MENU,   // Settings tab — landing page listing settings apps
     APP_THEME,           // Settings > Themes (library theme picker)
+    APP_ABOUT,           // Settings > About (version + project info)
     APP_COUNT
 };
 

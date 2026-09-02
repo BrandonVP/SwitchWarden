@@ -18,9 +18,10 @@ static uint8_t actionIdx(uint8_t p) { return (uint8_t)(3 * p + 2); }
 static const int ACTION_BASE = 1;
 
 // Fixed accent colors (RGB565) that read the same across themes.
-static const uint16_t COL_RUN  = 0x07E0; // green — running
-static const uint16_t COL_LOCK = 0x8410; // grey  — cooling locked on
-static const uint16_t COL_DIM  = 0x8410; // grey  — "OFF" / disabled text
+static const uint16_t COL_RUN   = 0x07E0; // green — running
+static const uint16_t COL_LOCK  = 0x8410; // grey  — cooling locked on
+static const uint16_t COL_DIM   = 0x8410; // grey  — "OFF" / disabled text
+static const uint16_t COL_FAULT = 0xF800; // red   — cooling-loss safety fault
 
 static const char* const PSU_NAMES[PSU_COUNT] = { "Brandon", "Jason", "Ubuntu", "Cooling" };
 
@@ -30,6 +31,17 @@ static bool s_lastCommanded[PSU_COUNT];
 static void styleStatus(uint8_t p)
 {
     UserInterfaceClass& s = GUI_I.appButtons()[statusIdx(p)];
+
+    // Cooling-loss fault takes over the cooling row's pill.
+    if (p == PSU_COOLING && POWER_isCoolingFault())
+    {
+        s.setText("FAULT");
+        s.setBgColor(COL_FAULT);
+        s.setBorderColor(COL_FAULT);
+        s.setTextColor(0xFFFF);
+        return;
+    }
+
     bool run = POWER_isRunning(p);
     s.setText(run ? "RUNNING" : "OFF");
     s.setBgColor(run ? COL_RUN : gfxTheme.background);
@@ -40,6 +52,18 @@ static void styleStatus(uint8_t p)
 static void styleAction(uint8_t p)
 {
     UserInterfaceClass& a = GUI_I.appButtons()[actionIdx(p)];
+
+    // While a cooling fault is latched, the cooling action becomes "ACK".
+    if (p == PSU_COOLING && POWER_isCoolingFault())
+    {
+        a.setText("ACK");
+        a.setBgColor(COL_FAULT);
+        a.setBorderColor(COL_FAULT);
+        a.setTextColor(0xFFFF);
+        a.setClickable(true);
+        return;
+    }
+
     bool on = POWER_isCommanded(p);
     bool locked = (p == PSU_COOLING) && POWER_isCoolingLocked();
 
@@ -119,7 +143,14 @@ void power_handler(int userInput)
     // can lock or unlock the cooling supply, redraw every row.
     if (userInput >= ACTION_BASE && userInput < ACTION_BASE + PSU_COUNT)
     {
-        POWER_toggle((uint8_t)(userInput - ACTION_BASE));
+        uint8_t tapped = (uint8_t)(userInput - ACTION_BASE);
+
+        // A tap on the cooling row while a fault is latched acknowledges it;
+        // otherwise it toggles the supply.
+        if (tapped == PSU_COOLING && POWER_isCoolingFault())
+            POWER_ackCoolingFault();
+        else
+            POWER_toggle(tapped);
 
         for (uint8_t p = 0; p < PSU_COUNT; p++)
         {
@@ -166,6 +197,17 @@ void power_handler(int userInput)
             styleAction(p);
             GUI_I.updateButton(actionIdx(p));
         }
+        dirty = true;
+    }
+
+    // Latched cooling fault (set by the interlock in POWER_tick, cleared by ACK):
+    // repaint the cooling row's pill + action to show/hide the alert.
+    static bool s_lastFault = false;
+    bool fault = POWER_isCoolingFault();
+    if (fault != s_lastFault)
+    {
+        s_lastFault = fault;
+        refreshRow(PSU_COOLING);
         dirty = true;
     }
 
